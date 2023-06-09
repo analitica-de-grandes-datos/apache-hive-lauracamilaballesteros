@@ -45,3 +45,11 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT
+    YEAR(C4) AS year_date, exploded_value, COUNT(*) AS cuenta
+FROM tbl0
+LATERAL VIEW EXPLODE(c5) tbl_exploded AS exploded_value
+GROUP BY exploded_value, YEAR(c4)
+ORDER BY year_date, exploded_value, cuenta;
